@@ -14,15 +14,15 @@ class frange:
             self.step = args[2]
         else:
             raise TypeError('Must be at most 3 arguments')
-        self.now = self.left
+        self.current = self.left
 
     def __next__(self):
-        if (self.step > 0 and self.now >= self.right) or (self.step < 0 and self.now <= self.right):
+        if (self.step > 0 and self.current >= self.right) or (self.step < 0 and self.current <= self.right):
             raise StopIteration
         else:
-            val = self.now
-            self.now += self.step
-            return val
+            value = self.current
+            self.current += self.step
+            return value
 
     def __iter__(self):
         return self
