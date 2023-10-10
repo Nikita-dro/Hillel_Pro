@@ -1,8 +1,10 @@
 import requests
 from memory_profiler import memory_usage
+import functools
 
 
 def memory_usage_decorator(f):
+    @functools.wraps(f)
     def deco(*args, **kwargs):
         memory = memory_usage((f, args, kwargs))
         print(f"Memory usage: {memory[0]} MB")
