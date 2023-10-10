@@ -1,18 +1,22 @@
 import requests
-from memory_profiler import memory_usage
 import functools
+import tracemalloc
 
 
-def memory_usage_decorator(f):
+def memory_usage(f):
     @functools.wraps(f)
     def deco(*args, **kwargs):
-        memory = memory_usage((f, args, kwargs))
-        print(f"Memory usage: {memory[0]} MB")
-        return f(*args, **kwargs)
+        tracemalloc.start()
+        result = f(*args, **kwargs)
+        snapshot = tracemalloc.take_snapshot()
+        memory = sum(stat.size for stat in snapshot.statistics('lineno')) / (1024*1024)
+        print(f"Memory usage: {memory} MB")
+        tracemalloc.stop()
+        return result
     return deco
 
 
-@memory_usage_decorator
+@memory_usage
 def fetch_url(url, first_n=100):
     """Fetch a given url"""
     res = requests.get(url)
