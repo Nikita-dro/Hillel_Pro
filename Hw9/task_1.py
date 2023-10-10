@@ -22,8 +22,6 @@ def cache(max_limit=64):
         @functools.wraps(f)
         def deco(*args, **kwargs):
             cache_key = (args, tuple(kwargs.items()))
-            print(cache_key)
-            print(deco._cache)
             if cache_key in deco._cache:
                 deco._count[cache_key] += 1
                 return deco._cache[cache_key]
