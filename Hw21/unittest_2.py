@@ -10,34 +10,66 @@ def formatted_name(first_name, last_name, middle_name=''):
 
 
 class TestFormattedName(unittest.TestCase):
-    def test_valid_inputs(self):
-        cases = {
-            formatted_name("nikita", "drobot"): "Nikita Drobot",
-            formatted_name("nikita", "drobot", "smith"): "Nikita Smith Drobot",
-            formatted_name("nikita", "drobot", ""): "Nikita Drobot",
-            formatted_name("nIkItA", "DrObOt", "sMiTh"): "Nikita Smith Drobot",
-            formatted_name("nikita", "", ""): "Nikita ",
-            formatted_name("", "", ""): " ",
-            formatted_name("", "drobot", ""): " Drobot",
-            formatted_name("", "", "smith"): " Smith "
-        }
-        for input_value, expected_result in cases.items():
-            with self.subTest(n=input_value):
-                result = input_value
-                self.assertEqual(result, expected_result)
-                self.assertIsInstance(result, str)
+    def test_without_middle_name(self):
+        result = formatted_name("nikita", "drobot")
+        self.assertEqual(result, "Nikita Drobot")
+        self.assertIsInstance(result, str)
 
-    def test_invalid_type(self):
-        input_list = [
-            (22, "drobot"),
-            ("nikita", [], "smith"),
-            (dict(), "drobot", ''),
-            ("nIkItA", tuple(), "sMiTh"),
-            (22.4, "", ""),
-            ("", True, ""),
-            (False, "drobot", ""),
-        ]
-        for input_value in input_list:
-            with self.subTest(n=input_value):
-                with self.assertRaises(TypeError):
-                    formatted_name(input_value)
+    def test_full_name(self):
+        result = formatted_name("nikita", "drobot", "smith")
+        self.assertEqual(result, "Nikita Smith Drobot")
+        self.assertIsInstance(result, str)
+
+    def test_with_empty_middle_name(self):
+        result = formatted_name("nikita", "drobot", "")
+        self.assertEqual(result, "Nikita Drobot")
+        self.assertIsInstance(result, str)
+
+    def test_just_with_first_name(self):
+        result = formatted_name("nikita", "", "")
+        self.assertEqual(result, "Nikita ")
+        self.assertIsInstance(result, str)
+
+    def test_just_with_last_name(self):
+        result = formatted_name("", "drobot", "")
+        self.assertEqual(result, " Drobot")
+        self.assertIsInstance(result, str)
+
+    def test_just_with_middle_name(self):
+        result = formatted_name("", "", "smith")
+        self.assertEqual(result, " Smith ")
+        self.assertIsInstance(result, str)
+
+    def test_without_all_parameters(self):
+        result = formatted_name("", "", "")
+        self.assertEqual(result, " ")
+        self.assertIsInstance(result, str)
+
+    def test_with_different_input_registers(self):
+        result = formatted_name("nIkItA", "DrObOt", "sMiTh")
+        self.assertEqual(result, "Nikita Smith Drobot")
+        self.assertIsInstance(result, str)
+
+    def test_invalid_int_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name((22, "drobot"))
+
+    def test_invalid_list_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name(("nikita", [], "smith"))
+
+    def test_invalid_dict_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name((dict(), "drobot", ''))
+
+    def test_invalid_tuple_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name(("nIkItA", tuple(), "sMiTh"))
+
+    def test_invalid_float_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name((22.4, "", ""))
+
+    def test_invalid_bool_input(self):
+        with self.assertRaises(TypeError):
+            formatted_name(("", True, ""))

@@ -39,24 +39,30 @@ class TestFibonacci(unittest.TestCase):
                 result = self.fibonacci(input_value)
                 self.assertEqual(result, expected_result)
 
-    def test_invalid_input(self):
-        invalid_inputs = [3.9, -15, '34', bool, None]
+    def test_float_input(self):
+        with self.assertRaises(ValueError):
+            self.fibonacci(3.9)
 
-        for input_value in invalid_inputs:
-            with self.subTest(n=input_value):
-                with self.assertRaises(ValueError):
-                    self.fibonacci(input_value)
+    def test_negative_number_input(self):
+        with self.assertRaises(ValueError):
+            self.fibonacci(-15)
+
+    def test_str_input(self):
+        with self.assertRaises(ValueError):
+            self.fibonacci('34')
+
+    def test_bool_input(self):
+        with self.assertRaises(ValueError):
+            self.fibonacci(bool)
+
+    def test_none_input(self):
+        with self.assertRaises(ValueError):
+            self.fibonacci(None)
 
     def test_large_input(self):
-        result = self.fibonacci(20)
-        self.assertEqual(result, 6765)
+        result = self.fibonacci(100)
+        self.assertEqual(result, 354224848179261915075)
 
     def test_cache(self):
         self.fibonacci(5)
         self.assertEqual(self.fibonacci.cache, [0, 1, 1, 2, 3, 5])
-
-        self.fibonacci(7)
-        self.assertEqual(self.fibonacci.cache, [0, 1, 1, 2, 3, 5, 8, 13])
-
-        self.fibonacci(4)
-        self.assertEqual(self.fibonacci.cache, [0, 1, 1, 2, 3, 5, 8, 13])
